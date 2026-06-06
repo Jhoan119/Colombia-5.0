@@ -1,0 +1,202 @@
+/* Variables: los colores y medidas del proyecto */
+:root {
+  --color-primario:   #0a2463;
+  --color-acento:     #f4d35e;
+  --color-sidebar-bg: #f0f4f8;
+  --ancho-sidebar:    250px;
+  --alto-header:      58px;
+  --fuente-titulo:    'Montserrat', sans-serif;
+  --fuente-cuerpo:    'Roboto', sans-serif;
+
+}
+
+/* Reset: quita márgenes y rellenos del navegador */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+/* Body: fuente base y espacio para el header fijo */
+body {
+  font-family: var(--fuente-cuerpo);
+  background: #ffffff;
+  color: #222222;
+  padding-top: var(--alto-header);
+  overflow-x: hidden;
+}
+
+/* ============================================================
+   HEADER — Barra azul fija en la parte superior
+   ============================================================ */
+
+/* position: fixed → se queda arriba aunque hagas scroll      */
+/* width: 100%     → ocupa todo el ancho de la pantalla       */
+/* z-index: 1000   → se pone por encima de todo lo demás      */
+#header-top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--alto-header);
+  background-color: var(--color-primario);
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Sidebar oculto inicialmente */
+#sidebar{
+    position: fixed;
+    top: var(--alto-header);
+    left: -250px; /* fuera de pantalla */
+    width: var(--ancho-sidebar);
+    height: calc(100vh - var(--alto-header));
+    background-color: var(--color-sidebar-bg);
+
+    transition: left 0.3s ease;
+}
+
+/* Sidebar visible */
+#sidebar.activo{
+    left: 0;
+}
+
+
+
+/* display: flex        → pone los hijos en fila horizontal   */
+/* align-items: center  → los centra verticalmente            */
+/* justify-content: space-between → uno a cada extremo        */
+.header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    padding: 0 1.5rem;
+    gap: 1rem;
+}
+
+/* Botón hamburguesa ☰ siempre visible                        */
+#btn-sidebar {
+    display: block;
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 1.8rem;
+    cursor: pointer;
+    line-height: 1;
+    flex-shrink: 0;
+}
+#btn-sidebar:hover {
+    opacity: 0.7;
+}
+
+/* Botón English — parece botón pero es un enlace <a>         */
+.btn-idioma {
+  color: #ffffff;
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
+  border-radius: 6px;
+  padding: 5px 14px;
+  font-size: 0.85rem;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+.btn-idioma:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+/* Cada enlace usa flex para poner ícono y texto en fila */
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Tamaño base de todos los íconos */
+.sidebar-link i {
+  font-size: 1rem;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+/* El ícono se agranda un poco al hacer hover */
+.sidebar-link:hover i {
+  transform: scale(1.1);
+}
+
+
+/* ============================================================
+   CONTENIDO PRINCIPAL — Área derecha donde va todo el contenido
+   ============================================================ */
+
+/* flex: 1 → ocupa todo el ancho que sobra después de la sidebar */
+/* padding → espacio interno para que el texto no quede pegado   */
+#contenido-principal {
+  flex: 1;
+  padding: 2rem 2.5rem;
+  overflow-y: auto;
+  /* Quitamos el max-width para que ocupe todo el ancho */
+  width: 100%;
+}
+/* ============================================================
+   HERO — Sección de bienvenida "Colombia 5.0"
+   ============================================================ */
+
+/* linear-gradient → degradado de azul oscuro a azul medio      */
+/* border-radius   → esquinas redondeadas                        */
+.seccion-hero {
+  background: linear-gradient(135deg, #0a2463 0%, #1a4fa0 100%);
+  color: #ffffff;
+  padding: 5rem 2rem;
+  border-radius: 12px;
+  text-align: center;
+  margin-bottom: 2.5rem;
+  width: 100%;
+}
+
+/* Título principal H1 */
+.seccion-hero h1 {
+  font-family: var(--fuente-titulo);
+  font-size: 3.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 0.8rem;
+}
+
+/* El "5.0" en amarillo */
+.text-accent {
+  color: var(--color-acento);
+}
+
+/* Subtítulo debajo del título */
+.hero-subtitulo {
+  font-size: 1.2rem;
+  opacity: 0.85;
+  margin: 0;
+  font-weight: 300;
+  letter-spacing: 1px;
+}
+
+/* Sidebar oculto inicialmente */
+#sidebar{
+    position: fixed;
+    top: var(--alto-header);
+    left: -250px; /* fuera de pantalla */
+    width: var(--ancho-sidebar);
+    height: calc(100vh - var(--alto-header));
+    background-color: var(--color-sidebar-bg);
+
+    transition: left 0.3s ease;
+}
+
+/* Sidebar visible */
+#sidebar.activo{
+    left: 0;
+}
