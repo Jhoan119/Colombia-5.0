@@ -2,12 +2,11 @@
 :root {
   --color-primario:   #0a2463;
   --color-acento:     #f4d35e;
-  --color-sidebar-bg: #f0f4f8;
+  --color-sidebar-bg: #f8f9fa;
   --ancho-sidebar:    250px;
   --alto-header:      58px;
   --fuente-titulo:    'Montserrat', sans-serif;
   --fuente-cuerpo:    'Roboto', sans-serif;
-
 }
 
 /* Reset: quita márgenes y rellenos del navegador */
@@ -20,6 +19,7 @@
 html {
   scroll-behavior: smooth;
 }
+
 /* Body: fuente base y espacio para el header fijo */
 body {
   font-family: var(--fuente-cuerpo);
@@ -27,6 +27,17 @@ body {
   color: #222222;
   padding-top: var(--alto-header);
   overflow-x: hidden;
+}
+
+/* ============================================================
+   WRAPPER — Contenedor que pone sidebar y contenido en fila
+   ============================================================ */
+
+/* display: flex → pone sidebar y main uno al lado del otro    */
+/* min-height    → que ocupe al menos toda la pantalla         */
+#wrapper {
+  display: flex;
+  min-height: calc(100vh - var(--alto-header));
 }
 
 /* ============================================================
@@ -47,53 +58,34 @@ body {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
-/* Sidebar oculto inicialmente */
-#sidebar{
-    position: fixed;
-    top: var(--alto-header);
-    left: -250px; /* fuera de pantalla */
-    width: var(--ancho-sidebar);
-    height: calc(100vh - var(--alto-header));
-    background-color: var(--color-sidebar-bg);
-
-    transition: left 0.3s ease;
-}
-
-/* Sidebar visible */
-#sidebar.activo{
-    left: 0;
-}
-
-
-
 /* display: flex        → pone los hijos en fila horizontal   */
 /* align-items: center  → los centra verticalmente            */
 /* justify-content: space-between → uno a cada extremo        */
 .header-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 100%;
-    padding: 0 1.5rem;
-    gap: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  padding: 0 1.5rem;
+  gap: 1rem;
 }
 
-/* Botón hamburguesa ☰ siempre visible                        */
+/* Botón hamburguesa ☰ siempre visible */
 #btn-sidebar {
-    display: block;
-    background: none;
-    border: none;
-    color: #ffffff;
-    font-size: 1.8rem;
-    cursor: pointer;
-    line-height: 1;
-    flex-shrink: 0;
+  display: block;
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 1.8rem;
+  cursor: pointer;
+  line-height: 1;
+  flex-shrink: 0;
 }
 #btn-sidebar:hover {
-    opacity: 0.7;
+  opacity: 0.7;
 }
 
-/* Botón English — parece botón pero es un enlace <a>         */
+/* Botón English — parece botón pero es un enlace <a> */
 .btn-idioma {
   color: #ffffff;
   border: 1.5px solid rgba(255, 255, 255, 0.6);
@@ -110,47 +102,147 @@ body {
   color: #ffffff;
 }
 
-/* Cada enlace usa flex para poner ícono y texto en fila */
+/* ============================================================
+   SIDEBAR — Menú lateral de navegación
+   ============================================================ */
+
+#sidebar {
+  position: fixed;
+  top: var(--alto-header);
+  left: -250px;           /* oculto fuera de pantalla por defecto */
+  width: var(--ancho-sidebar);
+  height: calc(100vh - var(--alto-header));
+  background-color: var(--color-sidebar-bg);
+  border-right: 1px solid #dee2e6;
+  transition: left 0.3s ease;
+  overflow-y: auto;
+  z-index: 900;
+}
+
+/* Sidebar visible al agregar clase .activo desde JS */
+#sidebar.activo {
+  left: 0;
+}
+
+/* Título "Contenido" */
+.sidebar-titulo {
+  font-family: var(--fuente-titulo);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #999;
+  padding: 1.5rem 1.2rem 0.5rem;
+  margin: 0;
+}
+
+/* Lista sin viñetas ni márgenes por defecto */
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Encabezados de sección: "1 Objetivo", "2 Conferencias"... */
+.sidebar-seccion {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #999;
+  padding: 1.2rem 1.2rem 0.3rem;
+  margin-top: 0.3rem;
+  border-top: 1px solid #dee2e6;
+}
+
+/* Número en círculo amarillo */
+/* display: inline-flex → permite centrar el número dentro del círculo */
+/* border-radius: 50%   → hace el cuadrado un círculo perfecto         */
+.sidebar-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  background-color: var(--color-acento);
+  color: #333;
+  font-size: 0.65rem;
+  font-weight: 800;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Enlace base */
+/* border-left: 3px solid transparent → reserva espacio para la línea  */
+/* del hover sin que el layout salte cuando aparece                     */
 .sidebar-link {
   display: flex;
   align-items: center;
   gap: 10px;
+  padding: 0.55rem 1.2rem;
+  color: #444;
+  text-decoration: none;
+  font-size: 0.88rem;
+  border-left: 3px solid transparent;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
 }
 
-/* Tamaño base de todos los íconos */
+/* Hover del enlace */
+.sidebar-link:hover {
+  background-color: #e9ecef;
+  border-left-color: var(--color-primario);
+  color: var(--color-primario);
+}
+
+/* Subítems (2.1, 2.2...) con sangría */
+.sidebar-sub {
+  padding-left: 2rem;
+  font-size: 0.83rem;
+  color: #666;
+}
+
+/* Ícono del enlace */
 .sidebar-link i {
-  font-size: 1rem;
-  width: 20px;
+  font-size: 0.95rem;
+  width: 18px;
   text-align: center;
   flex-shrink: 0;
-  transition: transform 0.2s;
+  color: var(--color-primario);
+  opacity: 0.7;
+  transition: opacity 0.2s;
 }
 
-/* El ícono se agranda un poco al hacer hover */
 .sidebar-link:hover i {
-  transform: scale(1.1);
+  opacity: 1;
 }
-
 
 /* ============================================================
    CONTENIDO PRINCIPAL — Área derecha donde va todo el contenido
    ============================================================ */
 
 /* flex: 1 → ocupa todo el ancho que sobra después de la sidebar */
-/* padding → espacio interno para que el texto no quede pegado   */
 #contenido-principal {
   flex: 1;
   padding: 2rem 2.5rem;
   overflow-y: auto;
-  /* Quitamos el max-width para que ocupe todo el ancho */
   width: 100%;
+  transition: margin-left 0.3s ease;
 }
+
+/* Se corre a la derecha cuando el sidebar está abierto */
+#contenido-principal.sidebar-abierto {
+  margin-left: var(--ancho-sidebar);
+}
+
 /* ============================================================
    HERO — Sección de bienvenida "Colombia 5.0"
    ============================================================ */
 
-/* linear-gradient → degradado de azul oscuro a azul medio      */
-/* border-radius   → esquinas redondeadas                        */
+/* linear-gradient → degradado de azul oscuro a azul medio */
+/* border-radius   → esquinas redondeadas                  */
 .seccion-hero {
   background: linear-gradient(135deg, #0a2463 0%, #1a4fa0 100%);
   color: #ffffff;
@@ -175,28 +267,723 @@ body {
   color: var(--color-acento);
 }
 
-/* Subtítulo debajo del título */
+/* ============================================================
+   BOTÓN HAMBURGUESA — Rotación al abrir sidebar
+   ============================================================ */
+
+/* transform: rotate(90deg) → gira el ícono ☰ cuando sidebar está abierto */
+#btn-sidebar i {
+  transition: transform 0.3s ease;
+}
+#btn-sidebar i.rotado {
+  transform: rotate(90deg);
+}
+
+/* ============================================================
+   HERO — Mejoras visuales
+   ============================================================ */
+
+.seccion-hero {
+  background: linear-gradient(135deg, #0a2463 0%, #1a4fa0 100%);
+  color: #ffffff;
+  padding: 4rem 2rem 3rem;
+  border-radius: 12px;
+  text-align: center;
+  margin-bottom: 2.5rem;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Círculo decorativo de fondo — puramente visual */
+/* pseudo-elemento ::before → no ocupa espacio en el HTML     */
+/* pointer-events: none     → no interfiere con los clics     */
+.seccion-hero::before {
+  content: '';
+  position: absolute;
+  top: -80px;
+  right: -80px;
+  width: 350px;
+  height: 350px;
+  background: rgba(244, 211, 94, 0.07);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.seccion-hero::after {
+  content: '';
+  position: absolute;
+  bottom: -100px;
+  left: -60px;
+  width: 280px;
+  height: 280px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* Contenedor interno para que el z-index funcione sobre los círculos */
+.hero-contenido {
+  position: relative;
+  z-index: 1;
+  max-width: 750px;
+  margin: 0 auto;
+}
+
+/* Etiqueta de fecha y lugar */
+.hero-etiqueta {
+  display: inline-block;
+  background: rgba(244, 211, 94, 0.15);
+  border: 1px solid rgba(244, 211, 94, 0.4);
+  color: var(--color-acento);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+  padding: 6px 16px;
+  border-radius: 20px;
+  margin-bottom: 1.5rem;
+}
+
+/* Título H1 */
+.seccion-hero h1 {
+  font-family: var(--fuente-titulo);
+  font-size: 3.8rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 0.8rem;
+}
+
+/* Subtítulo */
 .hero-subtitulo {
-  font-size: 1.2rem;
-  opacity: 0.85;
-  margin: 0;
+  font-size: 1rem;
+  opacity: 0.7;
+  margin-bottom: 1.2rem;
   font-weight: 300;
   letter-spacing: 1px;
 }
 
-/* Sidebar oculto inicialmente */
-#sidebar{
-    position: fixed;
-    top: var(--alto-header);
-    left: -250px; /* fuera de pantalla */
-    width: var(--ancho-sidebar);
-    height: calc(100vh - var(--alto-header));
-    background-color: var(--color-sidebar-bg);
-
-    transition: left 0.3s ease;
+/* Descripción */
+.hero-descripcion {
+  font-size: 1rem;
+  line-height: 1.7;
+  opacity: 0.85;
+  max-width: 580px;
+  margin: 0 auto 2rem;
 }
 
-/* Sidebar visible */
-#sidebar.activo{
-    left: 0;
+/* Botón CTA */
+/* display: inline-flex → para alinear el ícono con el texto  */
+.hero-btn {
+  display: inline-flex;
+  align-items: center;
+  background-color: var(--color-acento);
+  color: #0a2463;
+  font-family: var(--fuente-titulo);
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 12px 28px;
+  border-radius: 8px;
+  text-decoration: none;
+  margin-bottom: 3rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.hero-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(244, 211, 94, 0.35);
+  color: #0a2463;
+}
+
+/* Estadísticas */
+/* flex-wrap: wrap → en pantallas pequeñas se acomodan en varias filas */
+.hero-stats {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  padding-top: 2rem;
+}
+
+.hero-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 2rem;
+}
+
+.hero-stat-num {
+  font-family: var(--fuente-titulo);
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--color-acento);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.hero-stat-label {
+  font-size: 0.75rem;
+  opacity: 0.65;
+  letter-spacing: 0.5px;
+}
+
+/* Línea vertical entre estadísticas */
+.hero-divisor {
+  width: 1px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.seccion-texto{
+    text-align: justify;
+    line-height: 1.8;
+    font-size: 1.05rem;
+    color: #444;
+    margin-bottom: 1.5rem;
+}
+
+.video-container{
+    margin-top: 2rem;
+    width: 100%;
+}
+
+.video-container iframe{
+    width: 100%;
+    height: 500px;
+    border: none;
+    border-radius: 12px;
+}
+
+/* ========================================
+   SECCIÓN INTRODUCCIÓN
+======================================== */
+
+.seccion-contenido{
+    margin-bottom: 3rem;
+}
+
+.tarjeta-seccion{
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.seccion-encabezado h2{
+    font-family: var(--fuente-titulo);
+    color: var(--color-primario);
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.seccion-linea{
+    border: none;
+    height: 3px;
+    width: 80px;
+    background-color: var(--color-acento);
+    margin-bottom: 1.5rem;
+}
+
+.subtitulo-video{
+    font-family: var(--fuente-titulo);
+    color: var(--color-primario);
+    margin: 2rem 0 1rem;
+    font-size: 1.3rem;
+}
+
+.video-container{
+    margin-top: 2rem;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+}
+
+.video-container iframe{
+    width: 100%;
+    height: 500px;
+    border: none;
+    display: block;
+}
+
+
+.video-zona {
+  background: linear-gradient(135deg, #0a2463 0%, #1a3a7a 100%);
+  margin: 2.5rem -2rem -2rem;   /* rompe el padding de la tarjeta */
+  padding: 2rem 2rem 2.5rem;
+  border-radius: 0 0 12px 12px;
+}
+
+/* ============================================================
+   SECCIÓN 2 — Acordeón de Conferencias
+   ============================================================ */
+
+.conf-item {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+/* Cabecera del acordeón — reemplaza el estilo por defecto de Bootstrap */
+.conf-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.1rem 1.4rem;
+  background: #ffffff;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+  gap: 1rem;
+}
+
+.conf-header:hover {
+  background: #f8faff;
+}
+
+/* Cuando está abierto: fondo azul muy suave */
+.conf-header[aria-expanded="true"] {
+  background: #eef3fb;
+  border-bottom: 1px solid #d0ddf5;
+}
+
+.conf-header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Número "2.1" en círculo amarillo */
+.conf-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  height: 38px;
+  background: var(--color-acento);
+  color: #1a1a1a;
+  font-family: var(--fuente-titulo);
+  font-size: 0.8rem;
+  font-weight: 800;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.conf-titulo {
+  display: block;
+  font-family: var(--fuente-titulo);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-primario);
+  line-height: 1.2;
+}
+
+.conf-meta {
+  display: block;
+  font-size: 0.78rem;
+  color: #888;
+  margin-top: 2px;
+}
+
+/* Flecha — rota al abrir */
+.conf-chevron {
+  font-size: 1rem;
+  color: #aaa;
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+
+.conf-header[aria-expanded="true"] .conf-chevron {
+  transform: rotate(180deg);
+  color: var(--color-primario);
+}
+
+/* Cuerpo desplegado */
+.conf-body {
+  display: flex;
+  gap: 1.8rem;
+  padding: 1.5rem 1.4rem;
+  background: #fafbff;
+  align-items: flex-start;
+}
+
+/* Columna izquierda: imagen */
+.conf-imagen-wrap {
+  position: relative;
+  flex-shrink: 0;
+  width: 260px;
+}
+
+.conf-imagen {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+}
+
+/* Badge flotante sobre la imagen */
+.conf-imagen-badge {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  background: rgba(10, 36, 99, 0.85);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.3px;
+}
+
+/* Columna derecha: info */
+.conf-info {
+  flex: 1;
+}
+
+/* Speaker: avatar + nombre */
+.conf-speaker {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e8edf5;
+}
+
+.conf-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--color-primario);
+  color: var(--color-acento);
+  font-family: var(--fuente-titulo);
+  font-size: 0.8rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.conf-speaker-nombre {
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: #1a1a1a;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.conf-speaker-cargo {
+  font-size: 0.78rem;
+  color: #888;
+  margin: 2px 0 0;
+}
+
+.conf-descripcion {
+  font-size: 0.9rem;
+  line-height: 1.75;
+  color: #4a5568;
+  margin-bottom: 1rem;
+}
+
+/* Tags de tecnologías */
+.conf-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.conf-tag {
+  background: rgba(10, 36, 99, 0.07);
+  color: var(--color-primario);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.3px;
+}
+
+/* Responsive: en móvil la imagen va arriba */
+@media (max-width: 640px) {
+  .conf-body {
+    flex-direction: column;
+  }
+  .conf-imagen-wrap {
+    width: 100%;
+  }
+  .conf-imagen {
+    height: 180px;
+  }
+}
+
+
+
+/* ============================================================
+   CARRUSEL DE CONFERENCIAS
+   ============================================================ */
+
+/* Cada slide: flex — texto izquierda, imagen derecha */
+.conf-slide {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 1.8rem 3.5rem;   /* espacio lateral para las flechas */
+  background: #fafbff;
+  min-height: 300px;
+}
+
+/* Columna izquierda: texto — ocupa 50% */
+.conf-slide-info {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Columna derecha: imagen — ocupa 50% */
+.conf-slide-img-wrap {
+  flex: 1;
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.conf-slide-img {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Flechas personalizadas */
+.conf-arrow {
+  width: 2.5rem;
+  background: rgba(10, 36, 99, 0.1);
+  transition: background 0.2s;
+}
+
+.conf-arrow:hover {
+  background: rgba(10, 36, 99, 0.22);
+}
+
+.conf-arrow i {
+  font-size: 1.1rem;
+  color: var(--color-primario);
+}
+
+/* Puntos indicadores */
+.conf-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 0 8px;
+  background: #fafbff;
+  border-top: 1px solid #e8edf5;
+}
+
+.conf-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--color-acento);
+  opacity: 0.35;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.conf-dot.active {
+  opacity: 1;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .conf-slide {
+    flex-direction: column;
+    padding: 1.2rem 3rem;
+  }
+  .conf-slide-img {
+    height: 200px;
+  }
+}
+
+/* Espacio entre secciones */
+#introduccion {
+    margin-bottom: 2.5rem;
+}
+
+#conferencias {
+    margin-top: 2.5rem;
+}
+
+/* ============================================================
+   SECCIÓN 3.1 — GLOSARIO TÉCNICO
+   ============================================================ */
+
+.glosario-card {
+  background: #ffffff;
+  border: 1px solid #e8edf5;
+  border-radius: 12px;
+  padding: 1.8rem 1.5rem;
+  height: 100%;
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Línea de color arriba al hacer hover */
+.glosario-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--color-acento);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.glosario-card:hover::before {
+  transform: scaleX(1);
+}
+
+.glosario-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(10, 36, 99, 0.1);
+}
+
+/* Ícono */
+.glosario-icono {
+  width: 48px;
+  height: 48px;
+  background: rgba(10, 36, 99, 0.07);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.glosario-icono i {
+  font-size: 1.4rem;
+  color: var(--color-primario);
+}
+
+/* Término */
+.glosario-termino {
+  font-family: var(--fuente-titulo);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-primario);
+  margin-bottom: 0.6rem;
+}
+
+/* Definición */
+.glosario-def {
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: #555;
+  margin-bottom: 1rem;
+}
+
+/* Tag inferior */
+.glosario-tag {
+  display: inline-block;
+  background: rgba(244, 211, 94, 0.25);
+  color: #7a6200;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.3px;
+}
+
+/* ============================================================
+   SECCIÓN 3.2 — CONCLUSIÓN
+   ============================================================ */
+
+/* Cita destacada */
+.conclusion-cita {
+  background: linear-gradient(135deg, #0a2463 0%, #1a4fa0 100%);
+  color: #ffffff;
+  padding: 1.8rem 2rem;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+  position: relative;
+  padding-left: 3rem;
+}
+
+.conclusion-cita i {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  font-size: 1.8rem;
+  color: var(--color-acento);
+  opacity: 0.8;
+}
+
+.conclusion-cita p {
+  font-family: var(--fuente-titulo);
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.6;
+  margin: 0;
+  font-style: italic;
+}
+
+/* Aprendizajes clave */
+.conclusion-aprendizajes {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e8edf5;
+}
+
+.conclusion-aprendizajes-titulo {
+  font-family: var(--fuente-titulo);
+  color: var(--color-primario);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.aprendizaje-item {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  background: #f8faff;
+  border-radius: 10px;
+  padding: 1.2rem;
+  height: 100%;
+  border-left: 3px solid var(--color-acento);
+}
+
+.aprendizaje-icono {
+  font-size: 1.4rem;
+  color: var(--color-primario);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.aprendizaje-item strong {
+  display: block;
+  font-family: var(--fuente-titulo);
+  font-size: 0.88rem;
+  color: var(--color-primario);
+  margin-bottom: 4px;
+}
+
+.aprendizaje-item p {
+  font-size: 0.83rem;
+  color: #555;
+  line-height: 1.6;
+  margin: 0;
+}
+
+
+/* Compensa el header fijo al hacer scroll con anclas */
+section[id] {
+  scroll-margin-top: 70px;
 }
